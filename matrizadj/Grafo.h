@@ -185,7 +185,6 @@ using namespace std;
   vector<int> Grafo::listaAdj(int v){
     
     vector<int> adj;
-
     for(int i = 0; i < this->numVertices; i++){
       if(this->existeAresta(v, i) > 0){
         adj.push_back(i);

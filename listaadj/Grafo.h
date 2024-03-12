@@ -66,6 +66,13 @@ using namespace std;
 	  void imprime () const ;
 	  int _numVertices () const;
 	  Grafo *grafoTransposto ();
+    Grafo *grafoNaoDirecionado();
+    vector<int> listaAdj(int v);
+    bool existeCaminhoEuler();
+    bool existeCicloEuler();
+    bool direcionado();
+    bool autoloop();
+    bool completo();
     ~Grafo ();	  
 	};
 
@@ -105,9 +112,13 @@ using namespace std;
   }
 
   void Grafo::insereAresta (int v1, int v2, int peso) {
-    Celula item (v2, peso); 
-    this->adj[v1].insere (item); 
+    if(!this->existeAresta(v1,v2)){
+      Celula item (v2, peso); 
+      this->adj[v1].insere (item);
+    } 
   }
+
+
   bool Grafo::existeAresta (int v1, int v2) const {
     Celula item (v2, 0);
     return (this->adj[v1].pesquisa (item) != NULL);
@@ -158,6 +169,86 @@ using namespace std;
       }
     return grafoT;
   }
+
+
+  Grafo *Grafo::grafoNaoDirecionado () {
+    Grafo *grafoND = new Grafo (this->numVertices); 
+    for (int i= 0; i < this->numVertices; i++) {
+      Celula *item = this->adj[i]._primeiro ();
+      while (item != NULL) {
+        grafoND->insereAresta (i, item->vertice, item->peso);
+        grafoND->insereAresta (item->vertice, i, item->peso);
+        item = this->adj[i].proximo ();
+      }
+    }
+    return grafoND;
+  }
+
+  vector<int> Grafo::listaAdj(int v) {
+    vector<int> lista;
+    Celula *item = this->adj[v]._primeiro ();
+    while (item != NULL) {
+      lista.push_back(item->vertice);
+      item = this->adj[v].proximo ();
+    }
+    return lista;
+  }
+
+  bool Grafo::existeCaminhoEuler(){
+    for(int i = 0; i < this->numVertices; i++){
+      if(this->listaAdj(i).size() % 2 != 0){
+        return false;
+      }
+    }
+    return true;
+  }
+
+  bool Grafo::existeCicloEuler(){
+    for(int i = 0; i < this->numVertices; i++){
+      if(this->listaAdj(i).size() == 0){
+        return false;
+      }
+    }
+    return true;
+  }
+
+  bool Grafo::direcionado(){
+    for(int i = 0; i < this->numVertices; i++){
+      Celula *item = this->adj[i]._primeiro ();
+      while (item != NULL) {
+        if(!this->existeAresta(item->vertice, i)){
+          return true;
+        }
+        item = this->adj[i].proximo ();
+      }
+    }
+    return false;
+  }
+
+  bool Grafo::autoloop(){
+    for(int i = 0; i < this->numVertices; i++){
+      if(this->existeAresta(i, i)){
+        return true;
+      }
+    }
+    return false;
+  }
+
+  bool Grafo::completo(){
+    for(int i = 0; i < this->numVertices; i++){
+      for(int j = 0; j < this->numVertices; j++){
+        if(i != j){
+          if(!this->existeAresta(i, j)){
+            return false;
+          }
+        }
+      }
+    }
+    return true;
+  }
+
+
+
   Grafo::~Grafo () {
     delete [] this->adj;
   }	  
