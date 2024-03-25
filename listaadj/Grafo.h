@@ -73,7 +73,11 @@ using namespace std;
     bool direcionado();
     bool autoloop();
     bool completo();
-    ~Grafo ();	  
+    void buscaprofundidade();//FALTA
+    void visitaDFS();//FALTA
+    void buscaemlargura();//FALTA
+    void visitBFS();//FALTA
+    ~Grafo ();//FALTA
 	};
 
   Grafo::Grafo( istream &in )
@@ -245,6 +249,16 @@ using namespace std;
       }
     }
     return true;
+  }
+
+  void buscaprofundidade(){
+  
+
+  }
+
+  void visitaDFS(){
+
+
   }
 
 
