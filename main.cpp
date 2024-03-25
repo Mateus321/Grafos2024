@@ -149,6 +149,10 @@ int main (int argc, char **argv)
 
     completo(grafo);
     */
+
+
+   //Inserir busca profundidade
+   //inserir visitaDFS
     
     
 
