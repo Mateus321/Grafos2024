@@ -74,9 +74,15 @@ using namespace std;
     bool autoloop();
     bool completo();
     void buscaprofundidade();//FALTA
-    void visitaDFS(int u, int antecessor[], int cor[]);//FALTA
-    void buscaemlargura();//FALTA
-    void visitaBFS(int u, int antecessor[], int dist[], int cor[]);//FALTA
+    void visitaDFS(int u, int antecessor[], int cor[]);
+    bool aciclico();
+    bool verificaAciclico(int u, int antecessor[], int cor[]);
+    int ordTopologica();
+    int verificaOrdTopologica(int u, int antecessor[], int cor[], vector <int> l);
+    int numComponentes();
+
+    void buscaemlargura();
+    void visitaBFS(int u, int antecessor[], int dist[], int cor[]);
     ~Grafo ();//FALTA
 	};
 
@@ -276,8 +282,84 @@ using namespace std;
       }
     }
     cor[u] = 2;
-    
   }
+
+  bool Grafo::aciclico(){ 
+    int cor[this->numVertices], antecessor[this->numVertices];
+    for (int i = 0; i < this->numVertices; i++)
+    {
+      cor[i] = 0;
+      antecessor[i] = -1;
+    }
+    for(int i = 0; i < this->numVertices; i++){
+      if(cor[i] == 0){
+        verificaAciclico(i, antecessor, cor);
+      }
+    }
+  }
+
+  bool Grafo::verificaAciclico(int u, int antecessor[], int cor[]){
+    cor[u] = 1;
+    vector<int> lista = this->listaAdj(u);
+    for(int i = 0; i < lista.size(); i++){
+      if(cor[lista.at(i)] == 0){
+        antecessor[lista.at(i)] = u;
+        visitaDFS(lista.at(i), antecessor, cor);
+        return true;
+      }
+      else return false;
+    }
+    cor[u] = 2;
+  }
+
+  int Grafo::ordTopologica(){ 
+    int cor[this->numVertices], antecessor[this->numVertices];
+    vector <int> l;
+    for (int i = 0; i < this->numVertices; i++)
+    {
+      cor[i] = 0;
+      antecessor[i] = -1;
+    }
+    for(int i = 0; i < this->numVertices; i++){
+      if(cor[i] == 0){
+        verificaOrdTopologica(i, antecessor, cor, l);
+      }
+    }
+  }
+
+  int Grafo::verificaOrdTopologica(int u, int antecessor[], int cor[], vector <int> l){
+    cor[u] = 1;
+    vector<int> lista = this->listaAdj(u);
+    for(int i = 0; i < lista.size(); i++){
+      if(cor[lista.at(i)] == 0){
+        antecessor[lista.at(i)] = u;
+        verificaOrdTopologica(lista.at(i), antecessor, cor, l);
+      }
+    }
+    cor[u] = 2;
+    l.push_back(u);
+  }
+
+
+  int Grafo::numComponentes(){ 
+    int cor[this->numVertices], antecessor[this->numVertices], k;
+    for (int i = 0; i < this->numVertices; i++)
+    {
+      cor[i] = 0;
+      antecessor[i] = -1;
+    }
+    k = 0;
+    for(int i = 0; i < this->numVertices; i++){
+      if(cor[i] == 0){
+        k++;
+        visitaDFS(i, antecessor, cor);
+      }
+    }
+    return k;
+  }
+
+
+
 
   void Grafo::buscaemlargura(){
     int cor[this->numVertices], antecessor[this->numVertices], dist[this->numVertices];

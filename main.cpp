@@ -136,7 +136,6 @@ int main (int argc, char **argv)
 
     cicloEuleriano(grafo);
 
-
     //Ex7: Verificar se é direcionado
 
     direcionado(grafo);
@@ -148,18 +147,17 @@ int main (int argc, char **argv)
     //Ex9: Verificar se é completo
 
     completo(grafo);
-    
-
 
     //Busca profundidade
-    
+
     cout << "Busca em profundidade" << endl;
     grafo->buscaprofundidade();
 
    //Busca em largura
-
    cout << "Busca em largura" << endl;
    grafo->buscaemlargura(); 
-   */
+
+    */
+   
 
 }
