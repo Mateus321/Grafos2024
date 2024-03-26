@@ -73,10 +73,10 @@ using namespace std;
     bool direcionado();
     bool autoloop();
     bool completo();
-    void *buscaprofundidade();//FALTA
-    void *visitaDFS(int u);//FALTA
+    void buscaprofundidade();//FALTA
+    void visitaDFS(int u, int antecessor[], int cor[]);//FALTA
     void buscaemlargura();//FALTA
-    void visitBFS();//FALTA
+    void visitaBFS(int u, int antecessor[], int dist[], int cor[]);//FALTA
     ~Grafo ();//FALTA
 	};
 
@@ -251,7 +251,7 @@ using namespace std;
     return true;
   }
 
-  void buscaprofundidade(){ 
+  void Grafo::buscaprofundidade(){ 
     int cor[this->numVertices], antecessor[this->numVertices];
     for (int i = 0; i < this->numVertices; i++)
     {
@@ -260,25 +260,26 @@ using namespace std;
     }
     for(int i = 0; i < this->numVertices; i++){
       if(cor[i] == 0){
-        visitDFS(i, antecessor, cor);
+        visitaDFS(i, antecessor, cor);
       }
     }
   }
 
   void Grafo::visitaDFS(int u, int antecessor[], int cor[]){
     cor[u] = 1;
+    cout << "Visitou: " << u << endl;
     vector<int> lista = this->listaAdj(u);
     for(int i = 0; i < lista.size(); i++){
       if(cor[lista.at(i)] == 0){
         antecessor[lista.at(i)] = u;
-        visitDFS(lista.at(i));
+        visitaDFS(lista.at(i), antecessor, cor);
       }
     }
     cor[u] = 2;
     
   }
 
-  void buscaemlargura(){
+  void Grafo::buscaemlargura(){
     int cor[this->numVertices], antecessor[this->numVertices], dist[this->numVertices];
     for (int i = 0; i < this->numVertices; i++)
     {
@@ -289,22 +290,24 @@ using namespace std;
 
     for(int i = 0; i < this->numVertices; i++){
       if(cor[i] == 0){
-        visitBFS(i, antecessor, dist, cor);
+        visitaBFS(i, antecessor, dist, cor);
       }
     }
   }
 
-  void visitBfs(int u, int antecessor[], int dist[], int cor[]){
-    cor[u] = 0;
-    dist[u] = 1;
+  void Grafo::visitaBFS(int u, int antecessor[], int dist[], int cor[]){
+    cor[u] = 1;
+    dist[u] = 0;
     queue<int> fila;
     fila.push(u);
+    cout << "Visitou: " << u <<endl;
     while(!fila.empty()){
       int v = fila.front();
       fila.pop();
       vector<int> lista = this->listaAdj(v);
       for(int i = 0; i < lista.size(); i++){
         if(cor[lista.at(i)] == 0){
+          cout << "Visitou: " << lista.at(i)<<endl;
           cor[lista.at(i)] = 1;
           dist[lista.at(i)] = dist[v] + 1;
           antecessor[lista.at(i)] = v;

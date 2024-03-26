@@ -148,12 +148,18 @@ int main (int argc, char **argv)
     //Ex9: Verificar se é completo
 
     completo(grafo);
-    */
+    
 
 
-   //Inserir busca profundidade
-   //inserir visitaDFS
+    //Busca profundidade
     
-    
+    cout << "Busca em profundidade" << endl;
+    grafo->buscaprofundidade();
+
+   //Busca em largura
+
+   cout << "Busca em largura" << endl;
+   grafo->buscaemlargura(); 
+   */
 
 }
