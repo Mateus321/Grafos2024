@@ -73,8 +73,8 @@ using namespace std;
     bool direcionado();
     bool autoloop();
     bool completo();
-    void buscaprofundidade();//FALTA
-    void visitaDFS();//FALTA
+    void *buscaprofundidade();//FALTA
+    void *visitaDFS(int u);//FALTA
     void buscaemlargura();//FALTA
     void visitBFS();//FALTA
     ~Grafo ();//FALTA
@@ -251,14 +251,68 @@ using namespace std;
     return true;
   }
 
-  void buscaprofundidade(){
-  
-
+  void buscaprofundidade(){ 
+    int cor[this->numVertices], antecessor[this->numVertices];
+    for (int i = 0; i < this->numVertices; i++)
+    {
+      cor[i] = 0;
+      antecessor[i] = -1;
+    }
+    for(int i = 0; i < this->numVertices; i++){
+      if(cor[i] == 0){
+        visitDFS(i, antecessor, cor);
+      }
+    }
   }
 
-  void visitaDFS(){
+  void Grafo::visitaDFS(int u, int antecessor[], int cor[]){
+    cor[u] = 1;
+    vector<int> lista = this->listaAdj(u);
+    for(int i = 0; i < lista.size(); i++){
+      if(cor[lista.at(i)] == 0){
+        antecessor[lista.at(i)] = u;
+        visitDFS(lista.at(i));
+      }
+    }
+    cor[u] = 2;
+    
+  }
 
+  void buscaemlargura(){
+    int cor[this->numVertices], antecessor[this->numVertices], dist[this->numVertices];
+    for (int i = 0; i < this->numVertices; i++)
+    {
+      cor[i] = 0;
+      dist[i] = 999;
+      antecessor[i] = -1;
+    }
 
+    for(int i = 0; i < this->numVertices; i++){
+      if(cor[i] == 0){
+        visitBFS(i, antecessor, dist, cor);
+      }
+    }
+  }
+
+  void visitBfs(int u, int antecessor[], int dist[], int cor[]){
+    cor[u] = 0;
+    dist[u] = 1;
+    queue<int> fila;
+    fila.push(u);
+    while(!fila.empty()){
+      int v = fila.front();
+      fila.pop();
+      vector<int> lista = this->listaAdj(v);
+      for(int i = 0; i < lista.size(); i++){
+        if(cor[lista.at(i)] == 0){
+          cor[lista.at(i)] = 1;
+          dist[lista.at(i)] = dist[v] + 1;
+          antecessor[lista.at(i)] = v;
+          fila.push(lista.at(i));
+        }
+      }
+      cor[v] = 2;
+    }
   }
 
 
