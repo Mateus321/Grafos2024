@@ -80,9 +80,10 @@ using namespace std;
     int ordTopologica();
     int verificaOrdTopologica(int u, int antecessor[], int cor[], vector <int> l);
     int numComponentes();
-
     void buscaemlargura();
     void visitaBFS(int u, int antecessor[], int dist[], int cor[]);
+    void prim(int raiz);
+
     ~Grafo ();//FALTA
 	};
 
@@ -400,6 +401,32 @@ using namespace std;
     }
   }
 
+  void Grafo::prim(int raiz){
+    int antecessor[this->numVertices], vs[this->numVertices + 1];
+    double *peso = new double[this->numVertices];
+    bool itensHeap[this->numVertices];
+    for (int i = 0; i < this->numVertices; i++)
+    {
+      peso[i] = INT16_MAX;
+      antecessor[i] = -1;
+      itensHeap[i] = true;
+      vs[i+1] = i;
+    }
+    peso[raiz] = 0;
+    FPHeapMinIndireto Q(peso, vs, this->numVertices);
+    while(!Q.vazio()){
+      int u = Q.retiraMin();
+      itensHeap[u] = false;
+      vector<int> lista = this->listaAdj(u);
+      for(int i = 0; i < lista.size(); i++){
+        int v = lista.at(i);
+        if(itensHeap[v] && this->existeAresta(u, v) && this->primeiroListaAdj(u)->_peso() < peso[v]){
+          antecessor[v] = u;
+          Q.diminuiChave(v, peso[v]);
+        }
+      }
+    }
+  }
 
 
   Grafo::~Grafo () {
