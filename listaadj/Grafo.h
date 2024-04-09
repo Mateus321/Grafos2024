@@ -82,7 +82,8 @@ using namespace std;
     int numComponentes();
     void buscaemlargura();
     void visitaBFS(int u, int antecessor[], int dist[], int cor[]);
-    void prim(int raiz);
+    Grafo prim(int raiz);
+    void kruskal();
 
     ~Grafo ();//FALTA
 	};
@@ -401,16 +402,19 @@ using namespace std;
     }
   }
 
-  void Grafo::prim(int raiz){
-    int antecessor[this->numVertices], vs[this->numVertices + 1];
+  Grafo Grafo::prim(int raiz){
+    int antecessor[this->numVertices];
+    int *vs = new int[this->numVertices + 1];
     double *peso = new double[this->numVertices];
     bool itensHeap[this->numVertices];
     for (int i = 0; i < this->numVertices; i++)
     {
+      Celula *item = this->adj[i]._primeiro();
       peso[i] = INT16_MAX;
       antecessor[i] = -1;
       itensHeap[i] = true;
       vs[i+1] = i;
+      item = this->adj[i].proximo();
     }
     peso[raiz] = 0;
     FPHeapMinIndireto Q(peso, vs, this->numVertices);
@@ -426,6 +430,11 @@ using namespace std;
         }
       }
     }
+    
+  }
+
+  void Grafo::kruskal(){
+    
   }
 
 
