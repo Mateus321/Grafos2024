@@ -84,6 +84,9 @@ using namespace std;
     void visitaBFS(int u, int antecessor[], int dist[], int cor[]);
     Grafo prim(int raiz);
     void kruskal();
+    int EncontraConjunto();
+    void UnirConjunto();
+
 
     ~Grafo ();//FALTA
 	};
@@ -409,12 +412,10 @@ using namespace std;
     bool itensHeap[this->numVertices];
     for (int i = 0; i < this->numVertices; i++)
     {
-      Celula *item = this->adj[i]._primeiro();
       peso[i] = INT16_MAX;
       antecessor[i] = -1;
       itensHeap[i] = true;
       vs[i+1] = i;
-      item = this->adj[i].proximo();
     }
     peso[raiz] = 0;
     FPHeapMinIndireto Q(peso, vs, this->numVertices);
@@ -430,11 +431,36 @@ using namespace std;
         }
       }
     }
-    
+
+    Grafo *grafo = new Grafo(this->numVertices);
+    for (int i = 0; i < this->numVertices; i++)
+    {
+      grafo->insereAresta(i, antecessor[i], peso[i]);
+      if (direcionado())
+      {
+        grafo->insereAresta(antecessor[i], i, peso[i]);
+      }
+      
+    }
+    return *grafo;
   }
 
-  void Grafo::kruskal(){
+  int EncontraConjunto(int x, int *v){
+    if(v[x] == -1) return x;
+
+    return EncontraConjunto(v[x], v);
+  }
+
+  void UnirConjunto(int x, int y, int *v){
+    int conjuntoX = EncontraConjunto(x, v);
+    int conjuntoY = EncontraConjunto(y, v);
+    v[conjuntoX] = conjuntoY;
+  }
+  
+  void Grafo::Kruskal(){
+    int *v = new int[this->numVertices];
     
+    grafo->imprime();
   }
 
 
