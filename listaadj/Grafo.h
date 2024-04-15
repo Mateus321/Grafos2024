@@ -91,7 +91,7 @@ public:
   bool direcionado();
   bool autoloop();
   bool completo();
-  void buscaprofundidade(); // FALTA
+  void buscaprofundidade(); 
   void visitaDFS(int u, int antecessor[], int cor[]);
   bool aciclico();
   bool verificaAciclico(int u, int antecessor[], int cor[]);
@@ -100,10 +100,11 @@ public:
   int numComponentes();
   void buscaemlargura();
   void visitaBFS(int u, int antecessor[], int dist[], int cor[]);
+  void dijkstra(int raiz, int destino);
   Grafo *prim(int raiz);
   Grafo *kruskal();
 
-  ~Grafo(); // FALTA
+  ~Grafo(); 
 };
 
 Grafo::Grafo(istream &in)
@@ -580,6 +581,48 @@ Grafo *Grafo::kruskal(){
   }
   return grafo;
 }
+
+
+void Grafo::dijkstra(int raiz, int destino)
+{
+  int MAX = 999;
+  int antecessor[this->numVertices];
+  double *distancia = new double[this->numVertices];
+  bool itensHeap[this->numVertices];
+  int *vs = new int[this->numVertices + 1];
+
+  for (int i = 0; i < this->numVertices; i++)
+  {
+    distancia[i] = MAX;
+    antecessor[i] = -1;
+    itensHeap[i] = true;
+    vs[i + 1] = i;
+  }
+
+  distancia[raiz] = 0;
+  FPHeapMinIndireto Q(distancia, vs, this->numVertices);
+
+  while (!Q.vazio())
+  {
+    int u = Q.retiraMin();
+    itensHeap[u] = false;
+    Celula *item = this->adj[u]._primeiro();
+
+    while (item != NULL)
+    {
+      if (itensHeap[item->vertice] && item->peso + distancia[u] < distancia[item->vertice])
+      {
+        antecessor[item->vertice] = u;
+        distancia[item->vertice] = item->peso + distancia[u];
+        Q.diminuiChave(item->vertice, distancia[item->vertice]);
+      }
+      item = this->adj[u].proximo();
+    }
+    if (u == destino) break; 
+  }
+  cout << "Distancia: " << distancia[destino] << endl;
+}
+
 
 Grafo::~Grafo()
 {

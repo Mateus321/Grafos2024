@@ -8,11 +8,6 @@ void transposto (Grafo *grafo)
     grafoT->imprime();
 }
 
-void GrafoNaoDirecionado (Grafo *grafo)
-{
-    Grafo *grafoND = grafo->grafoNaoDirecionado();
-    //grafoND->imprime();
-}
 
 void insereAresta (Grafo *grafo, int i, int j, int peso)
 {
@@ -100,66 +95,21 @@ int main (int argc, char **argv)
 
     cout << endl; 
 
-    //Ex1: criar e imprimir grafo transposto.
-
-    //transposto(grafo);
-
-    //Ex2: Criar e imprimir um grafo não orientado.
-
-    //grafoNaoDirecionado(grafo);
-    
-    //Ex3: Ler e inserir nova aresta, verificando se ela já existe.
-    //int i, j;  
-    /*cin >> i >> j;
-    insereAresta(grafo, i, j, 0);
-    
-    cout << endl;
-    //grafo->imprime();
-   
-    //Ex4: Ler e remover uma aresta, verificando se ela já existe.
-    
-    cin >> i >> j;
-    removerAresta(grafo, 0, 1);
-    
-
-    //Ex5: Imprimir uma lista adjacente de um determinado vértices.
-
-    listaAdjacente(grafo, 0);
-    
-    cout << endl;
-
-    //Ex6: Verificando se existe caminho de euler
-    caminhoEuler(grafo);
-    
-    
-    //Ex7: Verificando se existe ciclo euleriano
-
-    cicloEuleriano(grafo);
-
-    //Ex7: Verificar se é direcionado
-
-    direcionado(grafo);
-
-    //Ex8: Verificar se existe autoloop
-
-    autoloop(grafo);
-
-    //Ex9: Verificar se é completo
-
-    completo(grafo);
-
-    //Busca profundidade
-
-    cout << "Busca em profundidade" << endl;
-    grafo->buscaprofundidade();
-
-   //Busca em largura
-   cout << "Busca em largura" << endl;
-   grafo->buscaemlargura(); 
-    */
 
     Grafo *grafoND = grafo->grafoNaoDirecionado();
 
+    cicloEuleriano(grafoND);
+    cout << " Numero de componentes: "<< grafo->numComponentes() << endl;
+    cout << endl;
+    cout << grafo->ordTopologica() << endl;
+    cout << endl;
+    grafoND->dijkstra(0,2);
+    cout << endl;
+
+
+    
+    cout << "Busca em largura" << endl;
+    grafoND->buscaemlargura();
 
     Grafo *GrafoKruskal = grafoND->kruskal();
     cout << "Grafo Kruskal" << endl;
