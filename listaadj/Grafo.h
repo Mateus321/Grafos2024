@@ -488,14 +488,15 @@ void Grafo::visitaBFS(int u, int antecessor[], int dist[], int cor[])
 }
 
 Grafo *Grafo::prim(int raiz)
-{
+{ 
+  int MAX = 999;
   int antecessor[this->numVertices];
   int *vs = new int[this->numVertices + 1];
   double *peso = new double[this->numVertices];
   bool itensHeap[this->numVertices];
   for (int i = 0; i < this->numVertices; i++)
   {
-    peso[i] = DBL_MAX;
+    peso[i] = MAX;
     antecessor[i] = -1;
     itensHeap[i] = true;
     vs[i + 1] = i;
@@ -506,15 +507,16 @@ Grafo *Grafo::prim(int raiz)
   {
     int u = Q.retiraMin();
     itensHeap[u] = false;
-    vector<int> lista = this->listaAdj(u);
-    for (int i = 0; i < lista.size(); i++)
+    Celula *item = this->adj[u]._primeiro();
+    while (item != NULL)
     {
-      int v = lista[i];
-      if (itensHeap[v] && this->existeAresta(u, v) && this->primeiroListaAdj(u)->_peso() < peso[v])
+      if (itensHeap[item->vertice] && item->peso < peso[item->vertice])
       {
-        antecessor[v] = u;
-        Q.diminuiChave(v, peso[v]);
+        antecessor[item->vertice] = u;
+        peso[item->vertice] = item->peso;
+        Q.diminuiChave(item->vertice, item->peso);
       }
+      item = this->adj[u].proximo();
     }
   }
 
