@@ -8,10 +8,10 @@ void transposto (Grafo *grafo)
     grafoT->imprime();
 }
 
-void grafoNaoDirecionado (Grafo *grafo)
+void GrafoNaoDirecionado (Grafo *grafo)
 {
     Grafo *grafoND = grafo->grafoNaoDirecionado();
-    grafoND->imprime();
+    //grafoND->imprime();
 }
 
 void insereAresta (Grafo *grafo, int i, int j, int peso)
@@ -96,7 +96,7 @@ int main (int argc, char **argv)
 {
     ifstream in ("input.txt");
     Grafo *grafo = new Grafo (in);
-    grafo->imprime ();  
+    grafo->imprime();  
 
     cout << endl; 
 
@@ -109,7 +109,7 @@ int main (int argc, char **argv)
     //grafoNaoDirecionado(grafo);
     
     //Ex3: Ler e inserir nova aresta, verificando se ela já existe.
-    int i, j;  
+    //int i, j;  
     /*cin >> i >> j;
     insereAresta(grafo, i, j, 0);
     
@@ -156,8 +156,17 @@ int main (int argc, char **argv)
    //Busca em largura
    cout << "Busca em largura" << endl;
    grafo->buscaemlargura(); 
-
     */
-   
+
+    Grafo *grafoND = grafo->grafoNaoDirecionado();
+
+
+    Grafo *GrafoKruskal = grafoND->kruskal();
+    cout << "Grafo Kruskal" << endl;
+    GrafoKruskal->imprime();
+
+    Grafo *GrafoPrim = grafoND->prim(0);
+    cout << "Grafo Prim" << endl;
+    GrafoPrim->imprime();
 
 }
