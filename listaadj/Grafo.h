@@ -100,9 +100,10 @@ public:
   int numComponentes();
   void buscaemlargura();
   void visitaBFS(int u, int antecessor[], int dist[], int cor[]);
-  void dijkstra(int raiz, int destino);
   Grafo *prim(int raiz);
   Grafo *kruskal();
+  void dijkstra(Grafo grafo, int raiz);
+  void floyd_warshall();
 
   ~Grafo(); 
 };
@@ -583,44 +584,47 @@ Grafo *Grafo::kruskal(){
 }
 
 
-void Grafo::dijkstra(int raiz, int destino)
+  void *Grafo::dijkstra(Grafo grafo, int raiz)
 {
   int MAX = 999;
   int antecessor[this->numVertices];
-  double *distancia = new double[this->numVertices];
-  bool itensHeap[this->numVertices];
+  double *peso = new double[this->numVertices];
   int *vs = new int[this->numVertices + 1];
-
+  int itensHeap[this->numVertices];
   for (int i = 0; i < this->numVertices; i++)
   {
-    distancia[i] = MAX;
+    peso[i] = MAX;
     antecessor[i] = -1;
     itensHeap[i] = true;
     vs[i + 1] = i;
   }
-
-  distancia[raiz] = 0;
-  FPHeapMinIndireto Q(distancia, vs, this->numVertices);
-
+  peso[raiz] = 0;
+  FPHeapMinIndireto Q(peso, vs, this->numVertices);
   while (!Q.vazio())
   {
     int u = Q.retiraMin();
     itensHeap[u] = false;
     Celula *item = this->adj[u]._primeiro();
-
     while (item != NULL)
     {
-      if (itensHeap[item->vertice] && item->peso + distancia[u] < distancia[item->vertice])
+      if (itensHeap[item->vertice] && peso[u] + item->peso < peso[item->vertice])
       {
         antecessor[item->vertice] = u;
-        distancia[item->vertice] = item->peso + distancia[u];
-        Q.diminuiChave(item->vertice, distancia[item->vertice]);
+        peso[item->vertice] = peso[u] + item->peso;
+        Q.diminuiChave(item->vertice, peso[item->vertice]);
       }
       item = this->adj[u].proximo();
     }
-    if (u == destino) break; 
   }
-  cout << "Distancia: " << distancia[destino] << endl;
+  for (int i = 0; i < this->numVertices; i++)
+  {
+    cout << "Peso:" << peso[i] << " Antecessor:" << antecessor[i] << endl;
+  }
+}
+
+
+void Grafo::floyd_warshall (int inicial, int final){
+
 }
 
 
