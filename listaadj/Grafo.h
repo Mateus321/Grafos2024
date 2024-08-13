@@ -91,7 +91,7 @@ public:
   bool direcionado();
   bool autoloop();
   bool completo();
-  void buscaprofundidade(); 
+  void buscaprofundidade();
   void visitaDFS(int u, int antecessor[], int cor[]);
   bool aciclico();
   bool verificaAciclico(int u, int antecessor[], int cor[]);
@@ -103,9 +103,9 @@ public:
   Grafo *prim(int raiz);
   Grafo *kruskal();
   void dijkstra(Grafo grafo, int raiz);
-  void floyd_warshall();
+  void floyd_warshall(int inicial, int final);
 
-  ~Grafo(); 
+  ~Grafo();
 };
 
 Grafo::Grafo(istream &in)
@@ -490,7 +490,7 @@ void Grafo::visitaBFS(int u, int antecessor[], int dist[], int cor[])
 }
 
 Grafo *Grafo::prim(int raiz)
-{ 
+{
   int MAX = 999;
   int antecessor[this->numVertices];
   int *vs = new int[this->numVertices + 1];
@@ -536,7 +536,8 @@ Grafo *Grafo::prim(int raiz)
 
 int EncontraConjunto(int x, int *v)
 {
-  if (v[x] == -1) {
+  if (v[x] == -1)
+  {
     return x;
   }
   return EncontraConjunto(v[x], v);
@@ -549,7 +550,8 @@ void UnirConjunto(int x, int y, int *v)
   v[conjuntoX] = conjuntoY;
 }
 
-Grafo *Grafo::kruskal(){
+Grafo *Grafo::kruskal()
+{
   Grafo *grafo = new Grafo(this->numVertices);
   int *v = new int[this->numVertices];
   for (int i = 0; i < this->numVertices; i++)
@@ -568,13 +570,12 @@ Grafo *Grafo::kruskal(){
     }
   }
 
-  sort(arestas.begin(), arestas.end(), [](Aresta a, Aresta b) {
-    return a._peso() < b._peso();
-  });
+  sort(arestas.begin(), arestas.end(), [](Aresta a, Aresta b)
+       { return a._peso() < b._peso(); });
 
   for (int i = 0; i < arestas.size(); i++)
   {
-     if(EncontraConjunto(arestas[i]._v1(), v) != EncontraConjunto(arestas[i]._v2(), v))
+    if (EncontraConjunto(arestas[i]._v1(), v) != EncontraConjunto(arestas[i]._v2(), v))
     {
       grafo->insereAresta(arestas[i]._v1(), arestas[i]._v2(), arestas[i]._peso());
       UnirConjunto(arestas[i]._v1(), arestas[i]._v2(), v);
@@ -583,8 +584,7 @@ Grafo *Grafo::kruskal(){
   return grafo;
 }
 
-
-  void *Grafo::dijkstra(Grafo grafo, int raiz)
+void Grafo::dijkstra(Grafo grafo, int raiz)
 {
   int MAX = 999;
   int antecessor[this->numVertices];
@@ -605,15 +605,16 @@ Grafo *Grafo::kruskal(){
     int u = Q.retiraMin();
     itensHeap[u] = false;
     Celula *item = this->adj[u]._primeiro();
+
     while (item != NULL)
     {
       if (itensHeap[item->vertice] && peso[u] + item->peso < peso[item->vertice])
-      {
+    {
         antecessor[item->vertice] = u;
         peso[item->vertice] = peso[u] + item->peso;
         Q.diminuiChave(item->vertice, peso[item->vertice]);
-      }
-      item = this->adj[u].proximo();
+    }
+    item = this->adj[u].proximo();
     }
   }
   for (int i = 0; i < this->numVertices; i++)
@@ -623,10 +624,40 @@ Grafo *Grafo::kruskal(){
 }
 
 
-void Grafo::floyd_warshall (int inicial, int final){
-
+void Grafo::floyd_warshall(int inicial, int final)
+{
+  int dist[this->numVertices][this->numVertices];
+  for (int i = 0; i < this->numVertices; i++)
+  {
+    for (int j = 0; j < this->numVertices; j++)
+    {
+      dist[i][j] = 999;
+    }
+  }
+  for (int i = 0; i < this->numVertices; i++)
+  {
+    Celula *item = this->adj[i]._primeiro();
+    while (item != NULL)
+    {
+      dist[i][item->vertice] = item->peso;
+      item = this->adj[i].proximo();
+    }
+  }
+  for (int k = 0; k < this->numVertices; k++)
+  {
+    for (int i = 0; i < this->numVertices; i++)
+    {
+      for (int j = 0; j < this->numVertices; j++)
+      {
+        if (dist[i][j] > dist[i][k] + dist[k][j])
+        {
+          dist[i][j] = dist[i][k] + dist[k][j];
+        }
+      }
+    }
+  }
+  cout << "Distancia de " << inicial << " para " << final << " = " << dist[inicial][final] << endl;
 }
-
 
 Grafo::~Grafo()
 {

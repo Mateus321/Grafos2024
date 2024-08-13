@@ -95,7 +95,12 @@ int main (int argc, char **argv)
 
     cout << endl; 
 
-
+    cout << "Dijkstra" << endl;
+    grafo->dijkstra(0, 1);
+    cout << endl;
+    cout<<"Algoritmo Floyd Warshall"<< endl;
+    grafo->floyd_warshall(0, 1);
+    /*
     Grafo *grafoND = grafo->grafoNaoDirecionado();
 
     cicloEuleriano(grafoND);
@@ -117,6 +122,6 @@ int main (int argc, char **argv)
 
     Grafo *GrafoPrim = grafoND->prim(0);
     cout << "Grafo Prim" << endl;
-    GrafoPrim->imprime();
+    GrafoPrim->imprime();*/
 
 }
