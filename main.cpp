@@ -1,13 +1,14 @@
-#include "listaadj/Grafo.h" 
+#include "matrizadj/Grafo.h" 
 #include <fstream>
 using namespace std;
+
+/*
 
 void transposto (Grafo *grafo)
 {
     Grafo *grafoT = grafo->grafoTransposto();
     grafoT->imprime();
 }
-
 
 void insereAresta (Grafo *grafo, int i, int j, int peso)
 {
@@ -86,7 +87,7 @@ void completo (Grafo *grafo)
     else
         cout << "Grafo não completo" << endl;
 }
-
+*/
 int main (int argc, char **argv) 
 {
     ifstream in ("input.txt");
@@ -95,12 +96,16 @@ int main (int argc, char **argv)
 
     cout << endl; 
 
+    cout << "Fluxo maximo com Ford-fulkerson: " << grafo->ford_fulkerson(0,1) << endl;
+
+
+    /*
     cout << "Dijkstra" << endl;
     grafo->dijkstra(0, 1);
     cout << endl;
     cout<<"Algoritmo Floyd Warshall"<< endl;
     grafo->floyd_warshall(0, 1);
-    /*
+    
     Grafo *grafoND = grafo->grafoNaoDirecionado();
 
     cicloEuleriano(grafoND);

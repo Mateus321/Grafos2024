@@ -26,6 +26,9 @@ using namespace std;
     int numVertices;
     int *pos; // @{\it posi\c{c}\~ao atual ao se percorrer os adjs de um v\'ertice v}@
 
+    vector<vector<int> > fluxo;
+    vector<vector<int> > capacidade;
+
   public:
     Grafo (int numVertices);
     Grafo(istream &in);
@@ -44,6 +47,9 @@ using namespace std;
     vector<int> listaAdj(int v);
     bool existeCaminhoEuler();
     bool existeCicloEuler();
+    int ford_fulkerson(int source, int sink);
+    bool bfs(int s, int t, int pai[]);
+
     ~Grafo ();	  
 	};
 
@@ -60,6 +66,9 @@ using namespace std;
       for (int j = 0; j < this->numVertices; j++) this->mat[i][j] = 0;
       this->pos[i] = -1; 
     }
+
+    capacidade.resize(numVertices, vector<int>(numVertices, 0));
+    fluxo.resize(numVertices, vector<int>(numVertices, 0));
 
     while (in>>v1>>v2>>peso) {
       Grafo::Aresta *a = new Grafo::Aresta (v1, v2, peso);
@@ -78,6 +87,8 @@ using namespace std;
       for (int j = 0; j < this->numVertices; j++) this->mat[i][j] = 0;
       this->pos[i] = -1; 
     }
+    capacidade.resize(numVertices, vector<int>(numVertices, 0));
+    fluxo.resize(numVertices, vector<int>(numVertices, 0));
   }	  
   
   Grafo::Grafo (int numVertices, int numArestas) {
@@ -220,7 +231,70 @@ using namespace std;
       return true;
     }
     return false;
-  } 
+  }  
+
+
+  int Grafo::ford_fulkerson(int source, int sink) 
+  {
+      int fluxoM = 0;
+      int pai[this->numVertices];
+  
+      while (bfs(source, sink, pai)) {
+          int caminhoFluxo = 999;
+          
+          for (int i = sink; i != source; i = pai[i]) 
+          {
+              int u = pai[i];
+              caminhoFluxo = min(caminhoFluxo, capacidade[u][i] - fluxo[u][i]);
+          }
+          
+          for (int i = sink; i != source; i = pai[i]) 
+          {
+              int u = pai[i];
+              fluxo[u][i] += caminhoFluxo;
+              fluxo[i][u] -= caminhoFluxo;
+          }
+          
+          fluxoM += caminhoFluxo;
+      }
+      
+      return fluxoM;
+  }
+
+  bool Grafo::bfs(int s, int t, int pai[]) 
+  {
+      bool visitado[this->numVertices];
+      for (int i = 0; i < this->numVertices; i++)
+      {
+        visitado[i] = false;
+      }
+      
+      queue<int> fila;
+      
+      fila.push(s);
+      visitado[s] = true;
+      pai[s] = -1;
+      
+      while (!fila.empty()) 
+      {
+          int u = fila.front();
+          fila.pop();
+          
+          for (int i = 0; i < numVertices; i++) 
+          {
+              if (!visitado[i] && (capacidade[u][i] - fluxo[u][i]) > 0) 
+              {
+                  fila.push(i);
+                  pai[i] = u;
+                  visitado[i] = true;
+                  if (i == t) 
+                      return true;
+              }
+          }
+      }
+      
+      return false;
+  }
 
   Grafo::~Grafo()
   {
