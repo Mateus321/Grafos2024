@@ -5,6 +5,7 @@
 #include <array>
 #include <cstring>
 #include <float.h>
+#include <list>
 using namespace std;
 	class Grafo {
 	public:
@@ -29,6 +30,9 @@ using namespace std;
     vector<vector<int> > fluxo;
     vector<vector<int> > capacidade;
 
+    int v;
+    list<int> *adj;
+
   public:
     Grafo (int numVertices);
     Grafo(istream &in);
@@ -49,6 +53,7 @@ using namespace std;
     bool existeCicloEuler();
     int ford_fulkerson(int source, int sink);
     bool bfs(int s, int t, int pai[]);
+    void colorirVertice();
 
     ~Grafo ();	  
 	};
@@ -75,6 +80,9 @@ using namespace std;
       this->insereAresta (a->_v1 (), a->_v2 (), a->_peso ()); 
       delete a;
     }
+
+    this->v = numVertices;
+    adj = new list<int>[v];
   }
 
   Grafo::Grafo (int numVertices) {
@@ -294,6 +302,31 @@ using namespace std;
       }
       
       return false;
+  }
+
+  void Grafo::colorirVertice()
+  {
+    int cor[this->numVertices];
+    for (int i = 0; i < this->numVertices; i++)
+    {
+      cor[i] = -1;
+    }
+    cor[0] = 0;
+    for (int i = 1; i < this->numVertices; i++)
+    {
+      vector<int> adj = this->listaAdj(i);
+      for (int j = 0; j < adj.size(); j++)
+      {
+        if (cor[adj[j]] != -1)
+        {
+          cor[i] = 1 - cor[adj[j]];
+        }
+      }
+    }
+    for (int i = 0; i < this->numVertices; i++)
+    {
+      cout << "Aula " << i << " sera no periodo " << cor[i] << endl;
+    }
   }
 
   Grafo::~Grafo()

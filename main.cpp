@@ -94,12 +94,14 @@ int main (int argc, char **argv)
     Grafo *grafo = new Grafo (in);
     grafo->imprime();  
 
+    grafo->colorirVertice();
+    
+    /*
     cout << endl; 
 
     cout << "Fluxo maximo com Ford-fulkerson: " << grafo->ford_fulkerson(0,1) << endl;
 
 
-    /*
     cout << "Dijkstra" << endl;
     grafo->dijkstra(0, 1);
     cout << endl;
